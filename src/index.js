@@ -11,11 +11,8 @@ import { familyRoutes } from './routes/family.js';
 import { settingsRoutes } from './routes/settings.js';
 import { aiRoutes } from './routes/ai.js';
 
-const isDev = process.env.NODE_ENV !== 'production';
 const fastify = Fastify({
-  logger: isDev
-    ? { transport: { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:HH:MM:ss' } } }
-    : true,
+  logger: true,
 });
 
 // ── CORS ──────────────────────────────────────────
