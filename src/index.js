@@ -19,16 +19,8 @@ const fastify = Fastify({
 });
 
 // ── CORS ──────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:8080')
-  .split(',')
-  .map(o => o.trim());
-
 await fastify.register(cors, {
-  origin: (origin, cb) => {
-    // Flutter Web 로컬 개발: origin 없거나 허용 목록에 있으면 통과
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('CORS 차단: ' + origin), false);
-  },
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 });
