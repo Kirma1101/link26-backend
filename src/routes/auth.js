@@ -1,6 +1,6 @@
 // src/routes/auth.js
 // auth_api_service.dart 의 /auth/login, /auth/signup, /auth/me, /auth/logout 구현
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { pool } from '../db/pool.js';
 
 export async function authRoutes(fastify) {
