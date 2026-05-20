@@ -1,29 +1,28 @@
-// src/routes/ai.js
+ï»¿// src/routes/ai.js
 export async function aiRoutes(fastify) {
   fastify.post('/ai/chat', async (req, reply) => {
     const message = req.body?.message ?? '';
     if (!message.trim()) {
-      return reply.status(400).send({ error: '¸Ş½ÃÁö¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.' });
+      return reply.status(400).send({ error: 'message required' });
     }
     try {
       const response = await fetch(
-        https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: ´ç½ÅÀº Link26ÀÇ AI °Ç°­ µµ¿ì¹ÌÀÔ´Ï´Ù. ¾à Á¤º¸, º¹¾à °ü¸®, °Ç°­ »ó´ãÀ» Àü¹®À¸·Î ÇÕ´Ï´Ù. ÇÑ±¹¾î·Î Ä£ÀıÇÏ°í Á¤È®ÇÏ°Ô ´äº¯ÇØÁÖ¼¼¿ä.\n\n»ç¿ëÀÚ Áú¹®:  }] }],
+            contents: [{ parts: [{ text: `Link26 AI ê±´ê°• ë„ìš°ë¯¸ì…ë‹ˆë‹¤. í•œêµ­ì–´ë¡œ ë‹µë³€í•˜ì„¸ìš”.\n\nì§ˆë¬¸: ${message}` }] }],
             generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
           })
         }
       );
       const data = await response.json();
-      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'ÁË¼ÛÇÕ´Ï´Ù. ´äº¯À» »ı¼ºÇÏÁö ¸øÇß½À´Ï´Ù.';
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'AI ì‘ë‹µ ì‹¤íŒ¨';
       return { answer };
     } catch (err) {
       fastify.log.error(err);
-      return reply.status(500).send({ error: 'AI ÀÀ´ä »ı¼º Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù.' });
+      return reply.status(500).send({ error: 'AI error' });
     }
   });
 }
-// updated
