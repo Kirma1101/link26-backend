@@ -12,13 +12,13 @@ export async function aiRoutes(fastify) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `Link26 AI 건강 도우미입니다. 한국어로 답변하세요.\n\n질문: ${message}` }] }],
+            contents: [{ parts: [{ text: `Link26 AI assistant. Answer in Korean.\n\nQuestion: ${message}` }] }],
             generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
           })
         }
       );
       const data = await response.json();
-      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'AI 응답 실패';
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'AI error';
       return { answer };
     } catch (err) {
       fastify.log.error(err);
