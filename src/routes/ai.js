@@ -1,7 +1,8 @@
 // src/routes/ai.js
+// 시연용 — 인증 없이 Gemini API 호출
 export async function aiRoutes(fastify) {
   // POST /ai/chat
-  fastify.post('/ai/chat', { onRequest: [fastify.authenticate] }, async (req, reply) => {
+  fastify.post('/ai/chat', async (req, reply) => {
     const message = req.body?.message ?? '';
     if (!message.trim()) {
       return reply.status(400).send({ error: '메시지를 입력해주세요.' });
@@ -31,7 +32,6 @@ export async function aiRoutes(fastify) {
       );
 
       const data = await response.json();
-      fastify.log.info(JSON.stringify(data));
       const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '죄송합니다. 답변을 생성하지 못했습니다.';
       return { answer };
 
@@ -42,7 +42,7 @@ export async function aiRoutes(fastify) {
   });
 
   // POST /ai/prescription
-  fastify.post('/ai/prescription', { onRequest: [fastify.authenticate] }, async (req, reply) => {
+  fastify.post('/ai/prescription', async (req, reply) => {
     const recognizedText = req.body?.recognizedText ?? '';
 
     try {
