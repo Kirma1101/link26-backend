@@ -22,3 +22,4 @@ export async function settingsRoutes(fastify) {
     return demoNotifications;
   });
 }
+// updated
