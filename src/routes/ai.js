@@ -10,9 +10,11 @@ export async function aiRoutes(fastify) {
           body: JSON.stringify({ contents: [{ parts: [{ text: 'Link26 AI. Answer in Korean. Question: ' + message }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1000 } }) }
       );
       const data = await res.json();
+      fastify.log.info('Gemini response: ' + JSON.stringify(data));
       const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'AI error';
       return { answer };
     } catch (err) {
+      fastify.log.error('Gemini error: ' + err.message);
       return reply.status(500).send({ error: 'AI error' });
     }
   });
