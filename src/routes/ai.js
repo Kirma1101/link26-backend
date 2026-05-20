@@ -1,99 +1,28 @@
 // src/routes/ai.js
-// ì‹œì—°ìš© â€” ì¸ì¦ ì—†ì´ Gemini API í˜¸ì¶œ
 export async function aiRoutes(fastify) {
-  // POST /ai/chat
   fastify.post('/ai/chat', async (req, reply) => {
     const message = req.body?.message ?? '';
     if (!message.trim()) {
-      return reply.status(400).send({ error: 'ë©”ì‹œì§€ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”.' });
+      return reply.status(400).send({ error: '¸Ş½ÃÁö¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.' });
     }
-
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `ë‹¹ì‹ ì€ Link26ì˜ AI ê±´ê°• ë„ìš°ë¯¸ì…ë‹ˆë‹¤. ì•½ ì •ë³´, ë³µì•½ ê´€ë¦¬, ê±´ê°• ìƒë‹´ì„ ì „ë¬¸ìœ¼ë¡œ í•©ë‹ˆë‹¤.
-í•œêµ­ì–´ë¡œ ì¹œì ˆí•˜ê³  ì •í™•í•˜ê²Œ ë‹µë³€í•´ì£¼ì„¸ìš”. ì˜í•™ì  ì¡°ì–¸ì€ ì°¸ê³ ìš©ì„ì„ ëª…ì‹œí•˜ê³ , ì‹¬ê°í•œ ì¦ìƒì€ ë³‘ì› ë°©ë¬¸ì„ ê¶Œê³ í•˜ì„¸ìš”.
-
-ì‚¬ìš©ì ì§ˆë¬¸: ${message}`
-              }]
-            }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1000,
-            }
+            contents: [{ parts: [{ text: ´ç½ÅÀº Link26ÀÇ AI °Ç°­ µµ¿ì¹ÌÀÔ´Ï´Ù. ¾à Á¤º¸, º¹¾à °ü¸®, °Ç°­ »ó´ãÀ» Àü¹®À¸·Î ÇÕ´Ï´Ù. ÇÑ±¹¾î·Î Ä£ÀıÇÏ°í Á¤È®ÇÏ°Ô ´äº¯ÇØÁÖ¼¼¿ä.\n\n»ç¿ëÀÚ Áú¹®:  }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
           })
         }
       );
-
       const data = await response.json();
-      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'ì£„ì†¡í•©ë‹ˆë‹¤. ë‹µë³€ì„ ìƒì„±í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.';
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'ÁË¼ÛÇÕ´Ï´Ù. ´äº¯À» »ı¼ºÇÏÁö ¸øÇß½À´Ï´Ù.';
       return { answer };
-
     } catch (err) {
       fastify.log.error(err);
-      return reply.status(500).send({ error: 'AI ì‘ë‹µ ìƒì„± ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.' });
-    }
-  });
-
-  // POST /ai/prescription
-  fastify.post('/ai/prescription', async (req, reply) => {
-    const recognizedText = req.body?.recognizedText ?? '';
-
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `ë‹¹ì‹ ì€ ì•½ì‚¬ AIì…ë‹ˆë‹¤. ì•„ë˜ ì²˜ë°©ì „ ë‚´ìš©ì„ ë¶„ì„í•´ì„œ JSON í˜•ì‹ìœ¼ë¡œë§Œ ë‹µë³€í•˜ì„¸ìš”.
-ì‘ë‹µ í˜•ì‹:
-{
-  "productName": "ì£¼ìš” ì•½ë¬¼ëª…",
-  "signal": "green ë˜ëŠ” yellow ë˜ëŠ” red",
-  "recommendation": "ë³µì•½ ê¶Œê³ ì‚¬í•­",
-  "reason": "ë¶„ì„ ì´ìœ "
-}
-signal ê¸°ì¤€: green(ì•ˆì „), yellow(ì£¼ì˜ í•„ìš”), red(ìœ„í—˜ ê°€ëŠ¥ì„±)
-
-ì²˜ë°©ì „ ë‚´ìš©: ${recognizedText}`
-              }]
-            }],
-            generationConfig: {
-              temperature: 0.3,
-              maxOutputTokens: 500,
-            }
-          })
-        }
-      );
-
-      const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';
-      const clean = text.replace(/```json|```/g, '').trim();
-
-      try {
-        const parsed = JSON.parse(clean);
-        return parsed;
-      } catch {
-        return {
-          productName: 'ë¶„ì„ ì™„ë£Œ',
-          signal: 'green',
-          recommendation: text,
-          reason: 'ì²˜ë°©ì „ì„ ë¶„ì„í–ˆìŠµë‹ˆë‹¤.',
-        };
-      }
-
-    } catch (err) {
-      fastify.log.error(err);
-      return reply.status(500).send({ error: 'ì²˜ë°©ì „ ë¶„ì„ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.' });
+      return reply.status(500).send({ error: 'AI ÀÀ´ä »ı¼º Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù.' });
     }
   });
 }

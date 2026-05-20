@@ -1,5 +1,4 @@
 // src/routes/settings.js
-// 시연용 — 인증 없이 메모리 데이터 사용
 let demoNotifications = {
   all: true,
   message: true,
@@ -8,12 +7,10 @@ let demoNotifications = {
 };
 
 export async function settingsRoutes(fastify) {
-  // GET /settings/notifications
   fastify.get('/settings/notifications', async () => {
     return demoNotifications;
   });
 
-  // PUT /settings/notifications
   fastify.put('/settings/notifications', async (req) => {
     const { all, message, family, phone } = req.body ?? {};
     demoNotifications = {

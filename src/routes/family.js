@@ -1,18 +1,15 @@
 // src/routes/family.js
-// ì‹œì—°ìš© â€” ì¸ì¦ ì—†ì´ ë¡œì»¬ ë©”ëª¨ë¦¬ ë°ì´í„° ì‚¬ìš©
 const demoMembers = [];
 
 export async function familyRoutes(fastify) {
-  // GET /family/members
   fastify.get('/family/members', async () => {
     return demoMembers;
   });
 
-  // POST /family/members
   fastify.post('/family/members', async (req, reply) => {
     const { name, relation, phone } = req.body ?? {};
     if (!name || !relation || !phone) {
-      return reply.status(400).send({ error: 'ì´ë¦„, ê´€ê³„, ì „í™”ë²ˆí˜¸ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”.' });
+      return reply.status(400).send({ error: 'ÀÌ¸§, °ü°è, ÀüÈ­¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.' });
     }
     const newMember = {
       id: String(Date.now()),
@@ -25,7 +22,6 @@ export async function familyRoutes(fastify) {
     return reply.status(201).send({ item: newMember });
   });
 
-  // DELETE /family/members/:id
   fastify.delete('/family/members/:id', async (req, reply) => {
     const idx = demoMembers.findIndex(m => m.id === req.params.id);
     if (idx !== -1) demoMembers.splice(idx, 1);
