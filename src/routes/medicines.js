@@ -1,5 +1,5 @@
 ﻿// src/routes/medicines.js
-const demoMedicines = [];
+export const demoMedicines = [];
 
 export async function medicinesRoutes(fastify) {
   fastify.get('/medicines', async () => {

@@ -1,16 +1,13 @@
-// src/routes/home.js
-// home_api_service.dart 의 GET /home/dashboard 구현
-// HomeDashboardDto: { medications, alarms, completedCount, totalCount }
-import { pool } from '../db/pool.js';
+﻿// src/routes/home.js
+import { demoMedicines } from './medicines.js';
 
 export async function homeRoutes(fastify) {
-  fastify.get('/home/dashboard', async (req) => {
-    // 로그인 없이 빈 데이터 반환
+  fastify.get('/home/dashboard', async () => {
     return {
-      medications: [],
+      medications: demoMedicines,
       alarms: [],
       completedCount: 0,
-      totalCount: 0,
+      totalCount: demoMedicines.length,
     };
   });
 }
