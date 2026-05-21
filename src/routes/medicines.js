@@ -17,22 +17,22 @@ export async function medicinesRoutes(fastify) {
       name, englishName: '', dose, frequency, time, completed: false,
     };
     demoMedicines.push(item);
-
-    // 알림 자동 생성
     const today = new Date();
     const dateLabel = today.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
-    const alarm = {
+    demoAlarms.push({
       id: String(Date.now() + 1),
-      dateLabel,
-      time,
-      type: 'medication',
-      medicineName: name,
-      dose,
-      status: '예정',
-    };
-    demoAlarms.push(alarm);
-
+      dateLabel, time, type: 'medication',
+      medicineName: name, dose, status: '예정',
+    });
     return reply.status(201).send({ item });
+  });
+
+  // 복용 완료 처리
+  fastify.patch('/alarms/:id/complete', async (req, reply) => {
+    const alarm = demoAlarms.find(a => a.id === req.params.id);
+    if (!alarm) return reply.status(404).send({ error: '알림을 찾을 수 없습니다.' });
+    alarm.status = '복용 완료';
+    return { ok: true };
   });
 
   fastify.delete('/medicines/:id', async (req, reply) => {
@@ -40,7 +40,6 @@ export async function medicinesRoutes(fastify) {
     if (idx !== -1) {
       const med = demoMedicines[idx];
       demoMedicines.splice(idx, 1);
-      // 관련 알림도 삭제
       const ai = demoAlarms.findIndex(a => a.medicineName === med.name);
       if (ai !== -1) demoAlarms.splice(ai, 1);
     }
