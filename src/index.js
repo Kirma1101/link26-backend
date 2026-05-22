@@ -19,7 +19,7 @@ const fastify = Fastify({
 // ?? CORS ??????????????????????????????????????????
 await fastify.register(cors, {
   origin: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 });
 
@@ -60,4 +60,5 @@ try {
   fastify.log.error(err);
   process.exit(1);
 }
+
 
