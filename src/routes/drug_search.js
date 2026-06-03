@@ -4,7 +4,7 @@
 export async function drugSearchRoutes(fastify) {
   // GET /drug/search?q=약이름
   fastify.get('/v1/public/easy-drug', async (req, reply) => {
-    const query = req.query.itemName ?? req.query.q ?? '';
+    const query = decodeURIComponent(req.query.itemName ?? req.query.q ?? '');
     if (!query.trim()) {
       return reply.status(400).send({ error: '검색어를 입력해주세요.' });
     }
